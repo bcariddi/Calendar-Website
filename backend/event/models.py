@@ -1,7 +1,6 @@
 from django.db import models
 import json, datetime
 
-# Create your models here.
 class Event(models.Model):
 	# ID
 	#id = models.UUIDField(primary_key=True, editable=False)
