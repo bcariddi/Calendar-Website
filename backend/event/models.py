@@ -1,26 +1,24 @@
 from django.db import models
+from django.contrib.postgres import fields
 import json, datetime
 
-class Event(models.Model):
-	# ID
-	#id = models.UUIDField(primary_key=True, editable=False)
-		
+class Event(models.Model):		
 	# Basic Info
-	title = models.CharField(max_length=200)
-	location = models.CharField(max_length=200)
-	description = models.TextField(default='')
+	title = models.CharField(default='',max_length=200)
+	location = models.CharField(default='',max_length=200)
+	eventDescription = models.TextField(default='',max_length=650)
 	
 	# Time Information
-	startDate = models.DateTimeField()
-	endDate = models.DateTimeField()
+	startDate = models.DateTimeField(default=None)
+	endDate = models.DateTimeField(default=None)
 	
 	#Tags Array
-	tags = models.CharField(max_length=200,default='')#models.ArrayField(models.CharField(max_length=50))
+	eventTags = fields.ArrayField(models.CharField(default='', max_length=50),default=list())
 	
 	# More Metadata
 	
 	## Event Creator
-	owner = models.CharField(max_length=100)
+	owner = models.CharField(default='',max_length=100)
 	
 	## Capacity
 	capacity = models.PositiveIntegerField(default=0)
@@ -31,12 +29,12 @@ class Event(models.Model):
 		eventJSON = {}
 		eventJSON["title"] = self.title
 		eventJSON["location"] = self.location
-		eventJSON["description"] = self.description
+		eventJSON["description"] = self.eventDescription
 		
 		eventJSON["startDate"] = self.startDate.isoformat()
 		eventJSON["endDate"] = self.endDate.isoformat()
 		
-		eventJSON["tags"] = self.tags.split(",")
+		eventJSON["tags"] = self.eventTags
 		
 		eventJSON["owner"] = self.owner
 		eventJSON["capacity"] = self.capacity
