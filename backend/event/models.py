@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.postgres import fields
+from django import forms
 import json, datetime
 
 class Event(models.Model):		
@@ -41,3 +42,46 @@ class Event(models.Model):
 		
 		
 		return json.dumps(eventJSON)
+		
+class EventForm(forms.Form):
+		# Basic Info
+	title = forms.CharField(default='',max_length=200)
+	location = forms.CharField(default='',max_length=200)
+	eventDescription = forms.TextField(default='',max_length=650)
+	
+	# Time Information
+	startDate = forms.DateTimeField(default=None)
+	endDate = forms.DateTimeField(default=None)
+	
+	#Tags Array (FIND A BETTER DATATYPE)
+	eventTags = forms.CharField(default='',max_length=600)
+	
+	# More Metadata
+	
+	## Event Creator
+	owner = forms.CharField(default='',max_length=100)
+	
+	## Capacity
+	capacity = forms
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 z.PositiveIntegerField(default=0)
