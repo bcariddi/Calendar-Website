@@ -44,11 +44,13 @@ class Event(models.Model):
 		return json.dumps(eventJSON)
 		
 class EventForm(forms.Form):
-		# Basic Info
-	title = forms.CharField(default='',max_length=200)
-	location = forms.CharField(default='',max_length=200)
-	eventDescription = forms.TextField(default='',max_length=650)
+	# Basic Info
+	title = forms.CharField(max_length=200)
+	location = forms.CharField(max_length=200)
+	'''
+	eventDescription = forms.TextField(max_length=650)
 	
+
 	# Time Information
 	startDate = forms.DateTimeField(default=None)
 	endDate = forms.DateTimeField(default=None)
@@ -62,26 +64,5 @@ class EventForm(forms.Form):
 	owner = forms.CharField(default='',max_length=100)
 	
 	## Capacity
-	capacity = forms
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	 z.PositiveIntegerField(default=0)
+	capacity = forms.PositiveIntegerField(default=0)
+	'''
