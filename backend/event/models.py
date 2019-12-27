@@ -1,20 +1,25 @@
 from django.db import models
 from django.contrib.postgres import fields
 from django import forms
-import json, datetime
+import json, datetime, enum
+
+class Tag(enum.Enum):
+	NONE = 0
+	FREE_FOOD = 1
+	
 
 class Event(models.Model):		
 	# Basic Info
 	title = models.CharField(default='',max_length=200)
 	location = models.CharField(default='',max_length=200)
-	eventDescription = models.TextField(default='',max_length=650)
+	description = models.TextField(default='',max_length=650)
 	
 	# Time Information
 	startDate = models.DateTimeField(default=None)
 	endDate = models.DateTimeField(default=None)
 	
 	#Tags Array
-	eventTags = fields.ArrayField(models.CharField(default='', max_length=50),default=list())
+	tags = fields.ArrayField(models.PositiveIntegerField(),default=list)
 	
 	# More Metadata
 	
@@ -28,14 +33,15 @@ class Event(models.Model):
 	def __str__(self):
 		# Returns a JSON representation
 		eventJSON = {}
+		eventJSON["id"] = self.id
 		eventJSON["title"] = self.title
 		eventJSON["location"] = self.location
-		eventJSON["description"] = self.eventDescription
+		eventJSON["description"] = self.description
 		
 		eventJSON["startDate"] = self.startDate.isoformat()
 		eventJSON["endDate"] = self.endDate.isoformat()
 		
-		eventJSON["tags"] = self.eventTags
+		eventJSON["tags"] = self.tags
 		
 		eventJSON["owner"] = self.owner
 		eventJSON["capacity"] = self.capacity
@@ -43,26 +49,8 @@ class Event(models.Model):
 		
 		return json.dumps(eventJSON)
 		
-class EventForm(forms.Form):
-	# Basic Info
-	title = forms.CharField(max_length=200)
-	location = forms.CharField(max_length=200)
-	'''
-	eventDescription = forms.TextField(max_length=650)
-	
-
-	# Time Information
-	startDate = forms.DateTimeField(default=None)
-	endDate = forms.DateTimeField(default=None)
-	
-	#Tags Array (FIND A BETTER DATATYPE)
-	eventTags = forms.CharField(default='',max_length=600)
-	
-	# More Metadata
-	
-	## Event Creator
-	owner = forms.CharField(default='',max_length=100)
-	
-	## Capacity
-	capacity = forms.PositiveIntegerField(default=0)
-	'''
+# Forms
+class EventForm(forms.ModelForm):
+	class Meta:
+		model = Event
+		fields = ["title", "location", "description", "startDate", "endDate", "tags", "owner", "capacity"]
