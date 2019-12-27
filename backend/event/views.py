@@ -27,8 +27,8 @@ def events(req):
 		else:
 			eventsList = Event.objects.order_by(sortBy)
 			
-		eventsList = '{' + ', '.join([str(event) for event in eventsList]) + '}'
-	
+		eventsList = '[' + ', '.join([str(event) for event in eventsList]) + ']'
+		
 		return HttpResponse(eventsList, content_type="application/json")
 
 			
