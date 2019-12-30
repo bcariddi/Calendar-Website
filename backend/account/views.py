@@ -35,6 +35,15 @@ def logoutUser(request):
 	logout(request)
 	return HttpResponse("Success")
 
+# Find User
+def findUser(request, username):
+	if request.method == "GET":
+		user = User.objects.filter(username=username)
+		
+		if len(user) > 0:
+			return HttpResponse(user[0].student, content_type="application/json")
+		
+
 # User Actions	
 @login_required(login_url="/")
 def saveEvent(request):

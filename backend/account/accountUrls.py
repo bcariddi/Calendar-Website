@@ -8,6 +8,6 @@ urlpatterns = [
 	path('unsave', views.unsaveEvent),
 	path('follow', views.followOrg),
 	path('unfollow', views.unfollowOrg),
-	path('admin/create',views.createUser),
-	path('admin/delete/<int:id>',views.deleteUser),
+	path('manage/create',views.createUser),
+	path('manage/delete/<int:id>',views.deleteUser),
 ]

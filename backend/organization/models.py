@@ -21,3 +21,10 @@ class Organization(models.Model):
 	followers = models.ManyToManyField(Student,related_name="following", blank=True)
 	events = models.ManyToManyField(Event,related_name="organizations", blank=True)
 	
+	class Meta:
+		ordering = ["name"]
+		
+class OrganizationForm(forms.ModelForm):
+	class Meta:
+		model = Organization
+		fields = ["name", "description"]

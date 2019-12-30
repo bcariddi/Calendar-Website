@@ -1,22 +1,13 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.decorators.csrf import get_token
+from django.contrib.auth.decorators import login_required
 import json
 
 from .models import Event,EventForm
+from organization.models import Organization
 
-'''
-# API Syntax 
-## Events
-* /events/
-	* sortBy
-	* count
-* /events/delete
-	* id
-
-'''
-
-def events(request):
+def allEvents(request):
 	if request.method == "GET":	
 		sortBy = request.GET.get('sortBy','-startDate')
 		count = request.GET.get('count',None)
@@ -31,8 +22,14 @@ def events(request):
 		
 		return HttpResponse(eventsList, content_type="application/json")
 
-			
-def add(request):
+def event(request, id):
+	if request.method == "GET":	
+		event = Event.objects.filter(id=id)
+		
+		if len(event) > 0:
+			return HttpResponse(event[0], content_type="application/json")
+
+def add(request, orgID):
 	if request.method == "GET":
 		form = EventForm()
 		
@@ -46,10 +43,20 @@ def add(request):
 		form = EventForm(request.POST)
 	
 		if form.is_valid():
-			form.save()
-			return HttpResponse("Success")
-		else:
-			return HttpResponse("Fail")
+			organization = Organization.objects.filter(id=orgID)
+			
+			if len(organization) > 0:
+				organization = organization[0]
+				
+				if organization in request.user.student.organizations.all():
+					event = form.save()
+					event.owner = request.user.username
+					event.save()
+					event.organizations.add(organization)
+			
+					return HttpResponse("Success")
+
+	return HttpResponse("Fail")
     
 def update(request, id):
 	updatingEvent = Event.objects.filter(id=id)
@@ -67,8 +74,11 @@ def update(request, id):
 			
 		elif request.method == "POST":
 			form = EventForm(request.POST, instance=updatingEvent)
-			form.save()
-			return HttpResponse("Success")
+			
+			for organization in form.organizations.all():
+				if organization in request.user.student.organizations.all():
+					form.save()
+					return HttpResponse("Success")
 
 	return HttpResponse("No Event Found")
 
@@ -78,8 +88,10 @@ def delete(request, id):
 	deletingEvent = Event.objects.filter(id=id)
 	
 	if len(deletingEvent) > 0:
-		deletingEvent.delete()
-		return HttpResponse("Success")
+		for organization in deletingEvent[0].organizations.all():
+			if organization in request.user.student.organizations.all():
+				deletingEvent.delete()
+				return HttpResponse("Success")
 	
 	return HttpResponse("Fail")
 	
