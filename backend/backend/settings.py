@@ -32,6 +32,8 @@ ALLOWED_HOSTS = ['167.172.232.218']
 
 INSTALLED_APPS = [
 	'event.apps.EventConfig',
+	'account.apps.AccountConfig',
+	'organization.apps.OrganizationConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

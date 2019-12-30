@@ -29,7 +29,9 @@ class Event(models.Model):
 	## Capacity
 	capacity = models.PositiveIntegerField(default=0)
 	
-	
+	class Meta:
+		ordering = ["startDate"]
+		
 	def __str__(self):
 		# Returns a JSON representation
 		eventJSON = {}
