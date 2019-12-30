@@ -29,7 +29,11 @@ class Event(models.Model):
 	## Capacity
 	capacity = models.PositiveIntegerField(default=0)
 	
+	## organizations
 	
+	class Meta:
+		ordering = ["startDate"]
+		
 	def __str__(self):
 		# Returns a JSON representation
 		eventJSON = {}
@@ -53,4 +57,4 @@ class Event(models.Model):
 class EventForm(forms.ModelForm):
 	class Meta:
 		model = Event
-		fields = ["title", "location", "description", "startDate", "endDate", "tags", "owner", "capacity"]
+		fields = ["title", "location", "description", "startDate", "endDate", "tags", "capacity"]
